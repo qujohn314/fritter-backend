@@ -313,3 +313,123 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+### **New Concepts**
+
+#### `GET /api/reactions?user=USERNAME&item=ITEM_ID` - Get user's rection to specific item
+
+**Returns**
+
+- The reaction a user gave a specific item
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the ITEM_ID is invalid
+- `404` if there is no reaction belonging to 'item' with given 'user'
+
+#### `GET /api/reactions?item=ITEM_ID` - Gets all reactions to a specific item
+
+**Returns**
+
+- An array of reactions corresponding to the item with 'ITEM_ID'
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the ITEM_ID is invalid
+
+#### `DELETE /api/reactions/?reactionId=ID&item=ITEM_ID` - Delete an existing reaction for a given item
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the reactionId is invalid
+
+#### `POST /api/reactions` - Create a new reaction for an item
+
+**Body**
+
+- `item` _{object}_ - The item the reaction is added to
+- 'author' _{string}_ - The user doing the reaction
+- `reaction` _{int}_ - The reaction type
+
+**Returns**
+
+- A success message
+- An object with the reaction
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` if the item, author or reaction is in the wrong format
+- `409` if the author already has a reaction belonging to the item
+
+#### `GET /api/comments` - Get all the comments
+
+**Returns**
+
+- An array of all comments sorted in descending order by date modified
+
+#### `GET /api/comments?author=USERNAME` - Get comments by author
+
+**Returns**
+
+- An array of comments created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/comments` - Create a new comment
+
+**Body**
+
+- `content` _{string}_ - The content of the comment
+
+**Returns**
+
+- A success message
+- A object with the created comment
+
+**Throws**
+
+- `403` if the user is not logged in
+- `400` If the comment content is empty or a stream of empty spaces
+- `413` If the comment content is more than 140 characters long
+
+#### `DELETE /api/comments/:commentId?` - Delete an existing comment
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the comment
+- `404` if the commentId is invalid
+
+#### `PUT /api/comments/:commentId?` - Update an existing comment
+
+**Body**
+
+- `content` _{string}_ - The new content of the comment
+
+**Returns**
+
+- A success message
+- An object with the updated comment
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the commentId is invalid
+- `403` if the user is not the author of the comment
+- `400` if the new comment content is empty or a stream of empty spaces
+- `413` if the new comment content is more than 140 characters long
