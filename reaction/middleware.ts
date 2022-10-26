@@ -42,6 +42,8 @@ const isValidReactionType = async (req: Request, res: Response, next: NextFuncti
   if(!reactionType || reactionType == "undefined")
     reactionType = req.body.reactionType;
 
+  console.log("reactionType: " + reactionType);
+
   if(!reactionType){
     res.status(400).json({
       error: 'Provided reactionType must be nonempty.'

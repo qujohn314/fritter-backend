@@ -16,14 +16,15 @@ class ReactionCollection {
    * @param {string} reaction_type - The reaction type
    * @return {Promise<HydratedDocument<Reaction>>} - The newly created reaction
    */
-  static async addOne(authorId: Types.ObjectId | string, itemType: string, itemId: Types.ObjectId | string, reaction_type: string): Promise<HydratedDocument<Reaction>> {
+  static async addOne(authorId: Types.ObjectId | string, itemType: string, itemId: Types.ObjectId | string, reactionType: string): Promise<HydratedDocument<Reaction>> {
     const date = new Date();
     const reaction = new ReactionModel({
       authorId,
       itemType,
       itemId,
       dateCreated: date,
-      reaction_type,
+      reactionType,
+      dateModified: date
     });
     await reaction.save(); // Saves freet to MongoDB
     return reaction.populate('authorId itemId');
