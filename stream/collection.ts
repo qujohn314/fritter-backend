@@ -1,5 +1,5 @@
 import type {HydratedDocument, Types} from 'mongoose';
-import {defaultSize, Stream} from './model';
+import {defaultSize, defaultTimer, Stream} from './model';
 import FreetCollection from '../freet/collection';
 import UserCollection from '../user/collection';
 import StreamModel from './model';
@@ -18,7 +18,8 @@ class StreamCollection {
       ownerId,
       streamFreets : [],
       capturedFreets : [],
-      maxSize: defaultSize
+      maxSize: defaultSize,
+      refreshTimer: defaultTimer
     });
     await stream.save();
     return stream.populate('ownerId');
