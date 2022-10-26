@@ -36,10 +36,6 @@ const UserSchema = new Schema({
     type: Date,
     required: true
   },
-  silentReactions: {
-    type: Boolean,
-    required: true
-  },
   silentMode: {
     type: Boolean,
     required: true
@@ -47,7 +43,11 @@ const UserSchema = new Schema({
   silentComments: {
     type: Boolean,
     required: true
-  }
+  },
+  silentReactions: {
+    type: Boolean,
+    required: true
+  },
   
 });
 
