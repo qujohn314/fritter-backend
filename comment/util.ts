@@ -1,11 +1,12 @@
-import type {HydratedDocument} from 'mongoose';
+import type {HydratedDocument, Types} from 'mongoose';
 import moment from 'moment';
-import type {Comment, PopulatedComment} from '../comment/model';
+import type {Comment, PopulatedComment} from './model';
 
-// Update this if you add a property to the Comment type!
+
 type CommentResponse = {
   _id: string;
   author: string;
+  parentFreet: Types.ObjectId;
   dateCreated: string;
   content: string;
   dateModified: string;
@@ -27,17 +28,22 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @returns {CommentResponse} - The comment object formatted for the frontend
  */
 const constructCommentResponse = (comment: HydratedDocument<Comment>): CommentResponse => {
-  const commentCopy: PopulatedComment = {
+   const commentCopy: PopulatedComment = {
     ...comment.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
   const {username} = commentCopy.authorId;
+  const {_id} = commentCopy.parentFreetId;
+
   delete commentCopy.authorId;
+  delete commentCopy.parentFreetId;
+  
   return {
     ...commentCopy,
     _id: commentCopy._id.toString(),
     author: username,
+    parentFreet: _id,
     dateCreated: formatDate(comment.dateCreated),
     dateModified: formatDate(comment.dateModified)
   };

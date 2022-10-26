@@ -7,6 +7,9 @@ type UserResponse = {
   _id: string;
   username: string;
   dateJoined: string;
+  silentMode: boolean;
+  silentComments: boolean;
+  silentReactions: boolean;
 };
 
 /**

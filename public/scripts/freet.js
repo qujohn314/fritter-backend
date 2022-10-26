@@ -6,6 +6,7 @@
  */
 
 function viewAllFreets(fields) {
+  console.log("Viewing");
   fetch('/api/freets')
     .then(showResponse)
     .catch(showResponse);
@@ -19,12 +20,6 @@ function viewFreetsByAuthor(fields) {
 
 function createFreet(fields) {
   fetch('/api/freets', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function editFreet(fields) {
-  fetch(`/api/freets/${fields.id}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
     .then(showResponse)
     .catch(showResponse);
 }

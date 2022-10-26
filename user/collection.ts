@@ -81,6 +81,57 @@ class UserCollection {
     return user;
   }
 
+
+     static async updateSilentMode(userId: Types.ObjectId | string, enabled: boolean): Promise<HydratedDocument<User>> {
+      let user = await UserModel.findOne({_id: userId});
+      user.silentMode = enabled;
+
+      if(!enabled){
+          user.silentReactions = enabled;
+          user.silentComments = enabled;
+      }
+
+      if(enabled && !user.silentComments && !user.silentReactions){
+          user.silentReactions = enabled;
+          user.silentComments = enabled;
+      }
+
+      await user.save();
+      return user;
+    }
+
+
+     static async updateSilentReactions(userId: Types.ObjectId | string, enabled: boolean): Promise<HydratedDocument<User>> {
+      let user = await UserModel.findOne({_id: userId});
+      user.silentReactions = enabled;
+      
+      if(!enabled && !user.silentComments){
+        user.silentMode = false;
+      }
+      if(!user.silentMode && !user.silentComments && enabled){
+        user.silentMode = true;
+      }
+
+      await user.save();
+      return user;
+    }
+
+     static async updateSilentComments(userId: Types.ObjectId | string, enabled: boolean): Promise<HydratedDocument<User>> {
+      let user = await UserModel.findOne({_id: userId});
+      user.silentComments = enabled;
+
+      if(!enabled && !user.silentReactions){
+        user.silentMode = false;
+      }
+      if(!user.silentMode && !user.silentReactions && enabled){
+        user.silentMode = true;
+      }
+
+      await user.save();
+      return user;
+    }
+
+
   /**
    * Delete a user from the collection.
    *

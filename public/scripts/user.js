@@ -38,3 +38,39 @@ function signOut() {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function enableSilentMode(fields) {
+  fetch(`/api/users/silentMode/${fields.silentMode}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function enableSilentReactions(fields) {
+  fetch(`/api/users/silentReactions/${fields.silentReactions}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function enableSilentComments(fields) {
+  fetch(`/api/users/silentComments/${fields.silentComments}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function disableSilentMode(fields) {
+  fetch(`/api/users/silentMode/${fields.silentMode}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function disableSilentReactions(fields) {
+  fetch(`/api/users/silentReactions/${fields.silentReactions}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function disableSilentComments(fields) {
+  fetch(`/api/users/silentComments/${fields.silentComments}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
+    .then(showResponse)
+    .catch(showResponse);
+}

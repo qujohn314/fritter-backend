@@ -179,7 +179,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- An array of all freets sorted in descending order by date modified
+- An array of all freets sorted in descending order by date created
 
 #### `GET /api/freets?author=USERNAME` - Get freets by author
 
@@ -207,7 +207,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 - `400` If the freet content is empty or a stream of empty spaces
-- `413` If the freet content is more than 140 characters long
+- `413` If the freet content is more than 280 characters long
 
 #### `DELETE /api/freets/:freetId?` - Delete an existing freet
 
@@ -221,24 +221,6 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the freet
 - `404` if the freetId is invalid
 
-#### `PUT /api/freets/:freetId?` - Update an existing freet
-
-**Body**
-
-- `content` _{string}_ - The new content of the freet
-
-**Returns**
-
-- A success message
-- An object with the updated freet
-
-**Throws**
-
-- `403` if the user is not logged in
-- `404` if the freetId is invalid
-- `403` if the user is not the author of the freet
-- `400` if the new freet content is empty or a stream of empty spaces
-- `413` if the new freet content is more than 140 characters long
 
 #### `POST /api/users/session` - Sign in user
 
@@ -314,71 +296,57 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 
-### **New Concepts**
+# **New Concepts**
 
-#### `GET /api/reactions?user=USERNAME&item=ITEM_ID` - Get user's rection to specific item
+# Silent Mode
 
-**Returns**
-
-- The reaction a user gave a specific item
-
-**Throws**
-
-- `403` if the user is not logged in
-- `404` if the ITEM_ID is invalid
-- `404` if there is no reaction belonging to 'item' with given 'user'
-
-#### `GET /api/reactions?item=ITEM_ID` - Gets all reactions to a specific item
-
-**Returns**
-
-- An array of reactions corresponding to the item with 'ITEM_ID'
-
-**Throws**
-
-- `403` if the user is not logged in
-- `404` if the ITEM_ID is invalid
-
-#### `DELETE /api/reactions/?reactionId=ID&item=ITEM_ID` - Delete an existing reaction for a given item
+### `PUT /api/users/silentMode/:silentModeBoolean` - Enable/Disable Silent Mode
 
 **Returns**
 
 - A success message
+- An object with the updated silentMode concept variables associated with the user.
 
 **Throws**
 
 - `403` if the user is not logged in
-- `404` if the reactionId is invalid
 
-#### `POST /api/reactions` - Create a new reaction for an item
-
-**Body**
-
-- `item` _{object}_ - The item the reaction is added to
-- 'author' _{string}_ - The user doing the reaction
-- `reaction` _{int}_ - The reaction type
+### `PUT /api/users/silentComments/:silentCommentsBoolean`- Enable/Disable Comments in Silent Mode
 
 **Returns**
 
 - A success message
-- An object with the reaction
+- An object with the updated silentMode concept variables associated with the user.
 
 **Throws**
 
 - `403` if the user is not logged in
-- `400` if the item, author or reaction is in the wrong format
-- `409` if the author already has a reaction belonging to the item
 
-#### `GET /api/comments` - Get all the comments
+### `PUT /api/users/silentReactions/:silentReactionsBoolean` - Enable/Disable Reactions in Silent Mode
 
 **Returns**
 
-- An array of all comments sorted in descending order by date modified
+- A success message
+- An object with the updated silentMode concept variables associated with the user.
+
+**Throws**
+
+- `403` if the user is not logged in
+
+# Comments
+
+#### `GET /api/comments` - Gets all the comments
+
+**Returns**
+
+- A success message
+- An array of all comments sorted in descending order by date created
 
 #### `GET /api/comments?author=USERNAME` - Get comments by author
 
 **Returns**
 
+- A success message
 - An array of comments created by user with username `author`
 
 **Throws**
@@ -386,22 +354,35 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
 
-#### `POST /api/comments` - Create a new comment
-
-**Body**
-
-- `content` _{string}_ - The content of the comment
+#### `GET /api/comments?freetId=ID` - Get comments by freet
 
 **Returns**
 
 - A success message
-- A object with the created comment
+- An array of comments belonging to freet with id `freetid`
+
+**Throws**
+
+- `400` if `freetid` is not given or blank
+- `404` if `freetid` is not a recognized freeID of any existing freet.
+
+#### `POST /api/comments` - Create a new comment
+
+**Body**
+- `parentFreetId` _{string}_ - The id of the freet the comment belongs to
+- `content` _{string}_ - The content of the freet
+
+**Returns**
+
+- A success message
+- An object with the created comment
 
 **Throws**
 
 - `403` if the user is not logged in
-- `400` If the comment content is empty or a stream of empty spaces
-- `413` If the comment content is more than 140 characters long
+- `400` If the comment content is empty or a stream of empty spaces, If the parentFreetId is blank or missing
+- `404` If no freet with id `parentFreetId` exists.
+- `413` If the comment content is more than 280 characters long
 
 #### `DELETE /api/comments/:commentId?` - Delete an existing comment
 
@@ -415,21 +396,196 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the comment
 - `404` if the commentId is invalid
 
-#### `PUT /api/comments/:commentId?` - Update an existing comment
+# Reactions
 
-**Body**
-
-- `content` _{string}_ - The new content of the comment
+#### `GET /api/reactions` - Gets all the reactions
 
 **Returns**
 
 - A success message
-- An object with the updated comment
+- An array of all reactions sorted in descending order by date modified
+
+#### `GET /api/reactions?author=ID` - Get reactions by author
+
+**Returns**
+
+- A success message
+- An array of reactions created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given or blank
+- `404` if `author` is not a recognized freeID of any existing freet.
+
+#### `GET /api/reactions?itemId=ID&itemType=TYPE` - Get reactions by author
+
+**Returns**
+
+- A success message
+- An array of reactions belonging to an item of type `itemType` with ID `itemId`
+
+**Throws**
+
+- `400` if `itemType` is missing or not either 'freet' or 'comment', or if itemID is missing
+- `404` if no item of type `itemType` exists with id `itemId`.
+
+#### `POST /api/reactions` - Create a new reaction
+
+**Body**
+- `reactionType` _{string}_ - The emotion/reaction type the reaction represents. 
+- `itemType` _{string}_ - The type that the item being reacted to is
+- `itemId` _{string}_ - The id of the item being reacted to
+
+**Returns**
+
+- A success message
+- An object with the created reaction
 
 **Throws**
 
 - `403` if the user is not logged in
-- `404` if the commentId is invalid
-- `403` if the user is not the author of the comment
-- `400` if the new comment content is empty or a stream of empty spaces
-- `413` if the new comment content is more than 140 characters long
+- `400` if `itemType` is missing or not either 'freet' or 'comment', if itemID is missing, or if reactionType is missing or not 'Angry','Sad','Wow','Love','Like','Dislike'.
+- `404` if no item of type `itemType` exists with id `itemId`.
+- `409` if a reaction authored by the user already exists in item of type `itemType` and id `itemId`.
+
+#### `DELETE /api/reactions/:reactionId?` - Delete an existing reaction
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in
+- `403` if the user is not the author of the reaction
+- `400` if the reactionId is blank or missing
+- `404` if the reactionId does not exist
+
+#### `PUT /api/reactions/:reactionId?` - Update an existing reaction
+
+**Body**
+
+- `reactionType` _{string}_ - The new reaction type/emotion of the reaction
+
+**Returns**
+
+- A success message
+- An object with the updated reaction
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if the reactionId is invalid
+- `403` if the user is not the author of the reaction
+- `400` if the reactionType is missing or not 'Angry','Sad','Wow','Love','Like','Dislike'
+
+# Stream
+
+#### `GET /api/streams` - Gets all the streams
+
+**Returns**
+
+- A success message
+- An array of all streams
+
+#### `GET /api/streams?owner=ID` - Get reactions by owner
+
+**Returns**
+
+- A success message
+- The stream owned by user with username `owner`
+
+**Throws**
+- `400` if `owner` is missing or empty
+- `404` if no user with _id `owner` exists
+- `404` if user with _id `owner` does not own a stream
+
+#### `POST /api/streams` - Create a new empty stream
+
+**Returns**
+
+- A success message
+- An object with the created stream
+
+**Throws**
+
+- `403` if the user is not logged in
+- `409` if the user already owns a stream 
+
+#### `PUT /api/streams/streamParams` - Update stream parameters
+
+**Body**
+
+- `refreshTime` _{number}_ - The new refresh time for the stream
+- `maxSize` _{number}_ - The new max number of freets allowed for the stream
+
+**Returns**
+
+- A success message
+- An object with the updated stream
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if user does not own a stream
+- `416` if the new refreshTime falls out of the range 10-300 inclusive
+- `416` if the new maxSize falls out of the range 5-15 inclusive
+
+#### `PUT /api/streams/:freetId` - Update stream by adding new freet to stream
+
+**Returns**
+
+- A success message
+- An object with the updated stream
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if user does not own a stream
+- `409` if the stream is at max freet capacity, if the stream already contains a freet with id freetId, or if the freet with id freetId is authored by the user
+- `404` if not freet with Id freetId does not exists
+- `400` if freetId missing or blank
+- `416` if the new maxSize falls out of the range 5-15 inclusive
+
+#### `PUT /api/streams/capture/:freetId` - Update stream by capturing an existing freet in the stream
+
+**Returns**
+
+- A success message
+- An object with the updated stream
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if user does not own a stream
+- `404` if freet with Id freetId does not exists or if freet does not exist in stream
+- `400` if freetId missing or blank
+- `409` if freet with Id freetId is already captured
+
+#### `PUT /api/streams/release/:freetId` - Update stream by releasing an existing captured freet
+
+**Returns**
+
+- A success message
+- An object with the updated stream
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if user does not own a stream
+- `404` if freet with Id freetId does not exists or if freet does not exist in stream
+- `400` if freetId missing or blank
+- `409` if freet with Id freetId is already non-captured
+
+#### `DELETE /api/streams:freetId?` - Delete an existing reaction
+
+**Returns**
+
+- A success message
+- An object with the updated stream that had freet with id freetId deleted from it.
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if user does not own a stream
+- `404` if freet with Id freetId does not exists, if freet does not exist in stream, or if freet exists in stream but is captured
